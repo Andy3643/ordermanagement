@@ -100,6 +100,9 @@
         display: block;
         width: 100%;
     }
+    .due-today {
+    background-color: #FFCCCC;
+    }
     </style>
 </head>
 <body>
@@ -121,7 +124,7 @@
         <th>Action</th>
     </tr>
     {% for order in pending_orders %}
-    <tr>
+    <tr {% if order.date_due == today %}class="due-today"{% endif %}>
         <td>{{ order.order_name }}</td>
         <td>{{ order.date_due }}</td>
         <td>{{ order.time_due }}</td>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Order
 from .forms import OrderForm
+from datetime import date 
 
 def order_list(request):
     # If form is submitted
@@ -20,7 +21,8 @@ def order_list(request):
     return render(request, 'orders/order_list.html', {
         'form': form,
         'pending_orders': pending_orders,
-        'completed_orders': completed_orders
+        'completed_orders': completed_orders,
+        'today': date.today() 
     })
 
 def mark_order_done(request, order_id):
