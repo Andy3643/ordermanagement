@@ -7,5 +7,5 @@ class OrderForm(forms.ModelForm):
         fields = ['order_name', 'date_due', 'time_due']
         widgets = {
             'date_due': forms.DateInput(attrs={'type': 'date'}),
-            'time_due': forms.Select(choices=[(f'{i:02d}:{j:02d}', f'{i:02d}:{j:02d}') for i in range(24) for j in range(0, 60, 30)]),
+            'time_due': forms.Select(choices=[(f'{i:02d}:{j:02d}', f'{i:02d}:{j:02d}') for i in range(24) for j in range(0, 60, 60)]),
         }

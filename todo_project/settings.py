@@ -94,11 +94,11 @@ DATABASES = {
 # if not DEBUG:
 #     DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}
 # else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': 'db.sqlite3',
-#         }}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'db.sqlite3',
+#     }}
 
 
 # Password validation
