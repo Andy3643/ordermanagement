@@ -263,18 +263,18 @@
                     {{ manual_form.as_p }}
                     <button type="submit" name="manual_order_submit">Add Order Manually</button>
                 </form>
-                    <!-- Full Order Form -->
-                <form method="post">
-                    {% csrf_token %}
-                    {{ raw_form.as_p }}
-                    <button type="submit" name="raw_order_submit">Add Order from Text</button>
-                </form>
+                    
 
             </div>
     
 
             <div method="post" class="form-right">
-
+<!-- Full Order Form -->
+<form method="post">
+    {% csrf_token %}
+    {{ raw_form.as_p }}
+    <button type="submit" name="raw_order_submit">Add Order from Text</button>
+</form>
 
 </div>
 </div>
