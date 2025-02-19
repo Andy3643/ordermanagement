@@ -256,6 +256,13 @@
         <h2>Add New Order</h2>
         <div class="form-container">
             <div class="form-left">
+
+                <!-- Manual Order Form -->
+                <form method="post">
+                    {% csrf_token %}
+                    {{ manual_form.as_p }}
+                    <button type="submit" name="manual_order_submit">Add Order Manually</button>
+                </form>
                     <!-- Full Order Form -->
                 <form method="post">
                     {% csrf_token %}
@@ -268,12 +275,7 @@
 
             <div method="post" class="form-right">
 
-    <!-- Manual Order Form -->
-    <form method="post">
-        {% csrf_token %}
-        {{ manual_form.as_p }}
-        <button type="submit" name="manual_order_submit">Add Order Manually</button>
-    </form>
+
 </div>
 </div>
         <h2>Pending Orders</h2>
