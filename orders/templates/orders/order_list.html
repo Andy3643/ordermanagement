@@ -40,9 +40,7 @@
             text-align: left;
         }
 
-        th {
-            background-color: #f2f2f2;
-        }
+
 
         tr:hover {
             background-color: #f5f5f5;
@@ -105,7 +103,7 @@
         width: 100%;
     }
     .due-today {
-    background-color: #FFCCCC;
+    background-color: #EADAF4;
     }
     /* Pagination styles */
     .pagination {
@@ -225,7 +223,7 @@
     width: 100%;
     padding: 10px;
     border: none;
-    background-color: #333;
+    background-color:  #945FBA;
     
     color: #fff;
     cursor: pointer;
@@ -234,7 +232,108 @@
 
 .form-left button:hover,
 .form-right button:hover {
-    background-color: #014d40;
+    background-color: #7D4AA8;
+}
+ /*search orders button*/
+ .search-completed-order-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #945FBA; /* Primary purple color */
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.search-completed-order-btn:hover {
+    background-color: #7D4AA8; /* Darker shade on hover */
+}
+
+
+/*done button styling*/
+
+.done-button {
+    padding: 8px 15px;
+    border: none;
+    background-color: #945FBA; /* Custom purple color */
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+.done-button:hover {
+    background-color: #7D4AA8; /* Slightly darker shade for hover */
+    transform: scale(1.05);
+}
+
+/* Table Header stylin*/
+
+.table-header-bg {
+    background-color: #D3BEE8; /* Soft lavender background */
+    color: #945FBA; /* Text color */
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+}
+
+
+/* style header section to show number o orders yet to be done*/
+
+.pending-order-header {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 500px;
+    width: 100%;
+    padding-bottom: 2rem;
+}
+
+.box-holder {
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(148, 95, 186, 0.3);
+}
+
+.box-holder h3 {
+    color:  #7D4AA8;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.box-holder p {
+    color:  #7D4AA8;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.stat-change {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.positive-due-today {
+    background-color: #e6f9e6;
+    color: #28a745;
+}
+
+.positive {
+    background-color: #e6f9e6;
+    color: #28a745;
+}
+
+.negative {
+    background-color: #f9e6e6;
+    color: #dc3545;
 }
 
 /* Responsive Design */
@@ -253,7 +352,9 @@
 <body>
 
     <div class="container">
-        <h2>Add New Order</h2>
+        <div class="top-order-header">
+        <h2>Add New Order</h2> 
+      </div>
         <div class="form-container">
             <div class="form-left">
 
@@ -278,81 +379,125 @@
 
 </div>
 </div>
-        <h2>Pending Orders</h2>
-        <table>
-            <tr>
-                <th>Order Name</th>
-                <th>Date Due</th>
-                <th>Time Due</th>
-                <th>Action</th>
-            </tr>
-            {% for order in pending_orders %}
-            <tr {% if order.date_due == today %}class="due-today"{% endif %}>
-                <td>{{ order.order_name }}</td>
-                <td>{{ order.date_due }}</td>
-                <td>{{ order.time_due }}</td>
-                <td><a href="{% url 'mark_order_done' order.id %}" style="color: blue;">Done</a></td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">Hurray!! You have Completed all the work !.</td>
-            </tr>
-            {% endfor %}
-        </table>
-    <div class="completed_orders">
-        <h2>Completed Orders</h2>
-    
-        <!-- Search Form -->
-        <form class="search-form" method="get" action="{% url 'order_list' %}">
-            <input type="text" name="search" placeholder="Search orders...">
-            <button type="submit">Search</button>
-        </form>
-    </div>
-    
-        <table>
-            <tr>
-                <th>Order Name</th>
-                <th>Date Due</th>
-                <th>Time Due</th>
-                <th>Action</th>
-            </tr>
-            {% for order in completed_orders %}
-            <tr>
-                <td>{{ order.order_name }}</td>
-                <td>{{ order.date_due }}</td>
-                <td>{{ order.time_due }}</td>
-                <td><a href="{% url 'delete_order' order.id %}" style="color: red;">Delete</a></td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No completed orders found.</td>
-            </tr>
-            {% endfor %}
-        </table>
-    
-        <!-- Pagination Links -->
-        <div class="Lower_section">
-            <div>
-            <span>
-                Page {{ completed_orders.number }} of {{ completed_orders.paginator.num_pages }}
+
+{% comment %} Top Header section of pending orders {% endcomment %}
+
+<div class="pending-order-header">
+    <div class="total-orders">
+        <div class="box-holder">
+            <!-- Show the total number of orders due for today -->
+            <h3>Orders Due Today</h3>
+            <p>{{ total_orders_today }}</p>
+
+            <!-- Show progress as a percentage: how many of today's orders are completed -->
+            <span class="stat-change positive-due-today">
+                {{ progress_today }}%
             </span>
-            </div>
-            <div>
-            <span>
-                {% if completed_orders.has_previous %}
-                    <a class="next" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
-                    <a class="next" href="?page={{ completed_orders.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
-                {% endif %}
-            </span>
-            <span>
-                {% if completed_orders.has_next %}
-                    <a class="next" href="?page={{ completed_orders.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
-                    <a class="next" href="?page={{ completed_orders.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
-                {% endif %}
-            </span>
-            </div>
         </div>
     </div>
-    
-    </body>
-    </html>
+
+    <div class="orders-due-today">
+        <div class="box-holder">
+            <!-- Show the number of orders for this week -->
+            <h3>Total Orders this Week</h3>
+            <p>{{ total_orders_this_week }}</p>
+
+            <!-- Compare order count with last week -->
+            <span class="stat-change {{ order_change_class }}">
+                {% if order_change_percentage > 0 %}
+                    +{{ order_change_percentage }}%
+                {% else %}
+                    {{ order_change_percentage }}%
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+
+
+
+
+<table>
+    <tr class="table-header-bg">
+        <th>Order Name</th>
+        <th>Date Due</th>
+        <th>Time Due</th>
+        <th>Action</th>
+    </tr>
+    {% for order in pending_orders %}
+    <tr {% if order.date_due == today %}class="due-today"{% endif %}>
+        <td>{{ order.order_name }}</td>
+        <td>{{ order.date_due }}</td>
+        <td>{{ order.time_due }}</td>
+        <td>
+            <a href="{% url 'mark_order_done' order.id %}">
+                <button class="done-button">Done</button>
+            </a>
+        </td>
+
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">Hurray!! You have Completed all the work !.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="completed_orders">
+    <h2>Completed Orders</h2>
+
+    <!-- Search Form -->
+    <form class="search-form" method="get" action="{% url 'order_list' %}">
+        <input type="text" name="search" placeholder="Search orders...">
+        <button type="submit" class="search-completed-order-btn" >Search</button>
+    </form>
+</div>
+
+<table>
+    <tr class="table-header-bg">
+        <th>Order Name</th>
+        <th>Date Due</th>
+        <th>Time Due</th>
+        <th>Action</th>
+    </tr>
+    {% for order in completed_orders %}
+    <tr>
+        <td>{{ order.order_name }}</td>
+        <td>{{ order.date_due }}</td>
+        <td>{{ order.time_due }}</td>
+        <td><a href="{% url 'delete_order' order.id %}" style="color: red;">Delete</a></td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No completed orders found.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<!-- Pagination Links -->
+<div class="Lower_section">
+    <div>
+    <span>
+        Page {{ completed_orders.number }} of {{ completed_orders.paginator.num_pages }}
+    </span>
+    </div>
+    <div>
+    <span>
+        {% if completed_orders.has_previous %}
+            <a class="next" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
+            <a class="next" href="?page={{ completed_orders.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+        {% endif %}
+    </span>
+    <span>
+        {% if completed_orders.has_next %}
+            <a class="next" href="?page={{ completed_orders.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+            <a class="next" href="?page={{ completed_orders.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
+        {% endif %}
+    </span>
+    </div>
+</div>
+</div>
+
+</body>
+</html>
