@@ -30,6 +30,11 @@ def order_list(request):
     # Get completed orders sorted by most recent first
     completed_orders = Order.objects.filter(is_done=True).order_by('-date_due', '-time_due')
 
+    # Paginate completed orders (15 per page)
+    paginator = Paginator(completed_orders, 15)
+    page_number = request.GET.get('page')
+    completed_orders_page = paginator.get_page(page_number)
+
     # Get orders due today
     orders_due_today = Order.objects.filter(date_due=today)
     total_orders_today = orders_due_today.count()
@@ -65,15 +70,15 @@ def order_list(request):
         'raw_form': raw_form,
         'manual_form': manual_form,
         'pending_orders': pending_orders,
-        'completed_orders': completed_orders,
+        'completed_orders': completed_orders_page,
         'today': today,
         'total_orders_today': total_orders_today,
         'progress_today': round(progress_today, 2),  # Rounded to 2 decimal places
         'total_orders_this_week': total_orders_this_week,
         'order_change_percentage': round(order_change_percentage, 2),
         'order_change_class': order_change_class,
+        'paginator': paginator,
     })
-
 
 
 def mark_order_done(request, order_id):
