@@ -285,11 +285,12 @@
 
 .pending-order-header {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    max-width: 500px;
+    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+    gap: 25px; /* Increased spacing for better separation */
+    max-width: 800px; /* Increased width for better layout */
     width: 100%;
-    padding-bottom: 2rem;
+    margin: 0 auto; /* Centering the grid */
+    padding: 2rem 0; /* Added padding for breathing space */
 }
 
 .box-holder {
@@ -344,6 +345,20 @@
     .form-left,
     .form-right {
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .pending-order-header {
+        grid-template-columns: repeat(2, 1fr); /* Two columns on smaller screens */
+        max-width: 90%; /* Adjusted for better spacing */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .pending-order-header {
+        grid-template-columns: repeat(1, 1fr); /* Stack boxes in one column for mobile */
+        max-width: 100%;
     }
 }
 
@@ -410,6 +425,13 @@
                     {{ order_change_percentage }}%
                 {% endif %}
             </span>
+        </div>
+    </div>
+    <!-- NEW: Orders Due Tomorrow -->
+    <div class="orders-due-tomorrow">
+        <div class="box-holder">
+            <h3>Orders Due Tomorrow</h3>
+            <p>{{ total_orders_tomorrow }}</p>
         </div>
     </div>
 </div>

@@ -23,6 +23,7 @@ def order_list(request):
                 return redirect('order_list')
 
     today = date.today()
+    tomorrow = today + timedelta(days=1)  # Get tomorrow's date
 
     # Get pending orders sorted in ascending order (earliest due date & time first)
     pending_orders = Order.objects.filter(is_done=False).order_by('date_due', 'time_due')
@@ -66,6 +67,9 @@ def order_list(request):
     # Determine if the order change is positive or negative
     order_change_class = "positive" if order_change_percentage > 0 else "negative"
 
+    # NEW: Get the total number of orders due tomorrow
+    total_orders_tomorrow = Order.objects.filter(date_due=tomorrow).count()
+
     return render(request, 'orders/order_list.html', {
         'raw_form': raw_form,
         'manual_form': manual_form,
@@ -78,7 +82,9 @@ def order_list(request):
         'order_change_percentage': round(order_change_percentage, 2),
         'order_change_class': order_change_class,
         'paginator': paginator,
+        'total_orders_tomorrow': total_orders_tomorrow,  # Send tomorrow's order count to the template
     })
+
 
 
 def mark_order_done(request, order_id):
