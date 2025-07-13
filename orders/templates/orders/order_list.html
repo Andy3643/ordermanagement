@@ -337,6 +337,114 @@
     color: #dc3545;
 }
 
+
+
+/* busiest day of the week section */
+
+.busiest-days-section {
+    margin-top: 40px;
+}
+
+.busiest-days-row {
+    display: flex;
+    justify-content: space-around; /* center horizontally */
+    gap: 30px; /* space between cards */
+    flex-wrap: wrap; /* allow to wrap on small screens */
+}
+
+.busiest-days-row .box-holder {
+    flex: 1 1 250px; /* grow, shrink, base width */
+    max-width: 100%;
+    background: white;
+    padding: 10px 70px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(148, 95, 186, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.busiest-days-row .box-holder:hover {
+    transform: scale(1.05);
+}
+
+.busiest-days-row h3 {
+    color: #7D4AA8;
+    margin-bottom: 10px;
+}
+
+.busiest-days-row p {
+    color: #7D4AA8;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+/* glowing border on cards */
+/* Outer glow wrapper */
+.glow-border {
+    position: relative;
+    display: inline-block;
+    border-radius: 12px;
+    padding: 3px; /* Border thickness */
+    overflow: hidden;
+}
+
+/* Animated gradient pseudo-element */
+.glow-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+   background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 20%,
+    rgba(148, 95, 186, 0.7) 30%,
+    transparent 40%,
+    transparent 60%,
+    rgba(148, 95, 186, 0.7) 70%,
+    transparent 80%,
+    transparent 100%
+);
+animation: spinBorder 6s linear infinite;
+    z-index: 0;
+    border-radius: 12px;
+    filter: blur(4px); /* 💡 This makes it glow! */
+}
+
+/* Inner content stays still */
+.inner-card {
+    position: relative;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(148, 95, 186, 0.3);
+    text-align: left;
+    z-index: 1;
+}
+
+.inner-card h3 {
+    color: #7D4AA8;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.inner-card p {
+    color: #7D4AA8;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+@keyframes spinBorder {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .form-container {
@@ -475,6 +583,40 @@
     </tr>
     {% endfor %}
 </table>
+
+   <!-- Display the bussiest day of the week -->
+<div class="busiest-days-section">
+    <h2>Week's Highlights</h2>
+
+    <div class="busiest-days-row">
+        {% if busiest_day %}
+            <div class="glow-border">
+                <div class="box-holder inner-card">
+                    <h3>Busiest Day</h3>
+                    <p>{{ busiest_day }} - {{ busiest_day_count }} orders</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if second_busiest_day %}
+            <div class="glow-border">
+                <div class="box-holder inner-card">
+                    <h3>Second Busiest Day</h3>
+                    <p>{{ second_busiest_day }} - {{ second_busiest_day_count }} orders</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not busiest_day %}
+        <p>No orders this week.</p>
+    {% endif %}
+</div>
+
+
+
+
+
 
 <div class="completed_orders">
     <h2>Completed Orders</h2>

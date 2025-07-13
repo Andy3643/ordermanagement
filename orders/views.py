@@ -3,6 +3,8 @@ from django.core.paginator import Paginator
 from .models import Order
 from .forms import RawOrderForm, ManualOrderForm
 from datetime import date, timedelta
+import calendar
+from collections import Counter
 
 def order_list(request):
     raw_form = RawOrderForm()
@@ -52,6 +54,40 @@ def order_list(request):
     orders_this_week = Order.objects.filter(date_due__range=[start_of_week, end_of_week])
     total_orders_this_week = orders_this_week.count()
 
+
+    # Group orders by date
+    orders_per_day = orders_this_week.values_list('date_due', flat=True)
+
+    # Count how many orders each exact date has
+    date_counts = Counter(orders_per_day)
+
+    # Sort dates by number of orders in descending order
+    sorted_dates = date_counts.most_common()
+
+    if sorted_dates:
+        # First busiest day
+        busiest_date_obj = sorted_dates[0][0]
+        busiest_day_name = calendar.day_name[busiest_date_obj.weekday()]
+        busiest_day = f"{busiest_day_name} {busiest_date_obj.strftime('%B %d')}"
+        busiest_day_count = sorted_dates[0][1]
+    else:
+        busiest_day = None
+        busiest_day_count = 0
+
+    if len(sorted_dates) > 1:
+        # Second busiest day
+        second_busiest_date_obj = sorted_dates[1][0]
+        second_busiest_day_name = calendar.day_name[second_busiest_date_obj.weekday()]
+        second_busiest_day = f"{second_busiest_day_name} {second_busiest_date_obj.strftime('%B %d')}"
+        second_busiest_day_count = sorted_dates[1][1]
+    else:
+        second_busiest_day = None
+        second_busiest_day_count = 0
+
+
+
+
+
     # Get orders from last week (Monday - Sunday)
     start_of_last_week = start_of_week - timedelta(days=7)
     end_of_last_week = start_of_week - timedelta(days=1)
@@ -83,6 +119,11 @@ def order_list(request):
         'order_change_class': order_change_class,
         'paginator': paginator,
         'total_orders_tomorrow': total_orders_tomorrow,  # Send tomorrow's order count to the template
+        'busiest_day': busiest_day,
+        'busiest_day_count': busiest_day_count,
+        'second_busiest_day': second_busiest_day,
+        'second_busiest_day_count': second_busiest_day_count,
+
     })
 
 
