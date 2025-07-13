@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -172,7 +174,7 @@
 
 
 .completed_orders{
-    margin-top: 15vh;
+    margin-top: 10vh;
     margin-bottom: 5vh;
     display: flex;
     justify-content: space-between;
@@ -342,21 +344,23 @@
 /* busiest day of the week section */
 
 .busiest-days-section {
-    margin-top: 40px;
+    margin-top: 10vh;
+    
 }
 
 .busiest-days-row {
     display: flex;
-    justify-content: space-around; /* center horizontally */
-    gap: 30px; /* space between cards */
-    flex-wrap: wrap; /* allow to wrap on small screens */
+    justify-content: space-around; 
+    gap: 30px; 
+    flex-wrap: wrap; 
+    padding-top: 4vh;
 }
 
 .busiest-days-row .box-holder {
     flex: 1 1 250px; /* grow, shrink, base width */
     max-width: 100%;
     background: white;
-    padding: 10px 70px;
+    padding: 10px 70px 10px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(148, 95, 186, 0.3);
     text-align: center;
@@ -378,6 +382,24 @@
     font-weight: bold;
 }
 
+.card-icon {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: 30px;
+    margin-top: 15px;
+    filter: drop-shadow(0 0 5px rgba(148, 95, 186, 0.5));
+    transition: transform 0.3s ease;
+}
+
+.card-icon:hover {
+    transform: scale(1.1);
+}
+.busy_display{
+    display: flex;
+    justify-content: space-between;
+}
 
 /* glowing border on cards */
 /* Outer glow wrapper */
@@ -385,7 +407,7 @@
     position: relative;
     display: inline-block;
     border-radius: 12px;
-    padding: 3px; /* Border thickness */
+    padding: 5px; /* Border thickness */
     overflow: hidden;
 }
 
@@ -394,21 +416,20 @@
     content: "";
     position: absolute;
     inset: 0;
-   background: conic-gradient(
+    background: conic-gradient(
     from 0deg,
     transparent 0%,
-    transparent 20%,
-    rgba(148, 95, 186, 0.7) 30%,
-    transparent 40%,
-    transparent 60%,
-    rgba(148, 95, 186, 0.7) 70%,
-    transparent 80%,
+    #1A6DFF 15%,
+    #C822FF 30%,
+    #6DC7FF 50%,
+    #FF66C4 60%,
+    #E6ABFF 80%,
     transparent 100%
 );
-animation: spinBorder 6s linear infinite;
+    animation: spinBorder 6s linear infinite;
     z-index: 0;
     border-radius: 12px;
-    filter: blur(4px); /* 💡 This makes it glow! */
+    filter: blur(4px);
 }
 
 /* Inner content stays still */
@@ -422,14 +443,24 @@ animation: spinBorder 6s linear infinite;
     z-index: 1;
 }
 
+
+/* Apply gradient text only inside glow-border inner-card */
+.glow-border .inner-card h3{
+color: #000;
+}
+.glow-border .inner-card p {
+    background: linear-gradient(135deg,  #4758f3, #945FBA, #913df0, #C822FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .inner-card h3 {
-    color: #7D4AA8;
-    margin-bottom: 10px;
     text-align: left;
+    font-weight: lighter;
 }
 
 .inner-card p {
-    color: #7D4AA8;
     font-size: 18px;
     font-weight: bold;
 }
@@ -592,8 +623,13 @@ animation: spinBorder 6s linear infinite;
         {% if busiest_day %}
             <div class="glow-border">
                 <div class="box-holder inner-card">
-                    <h3>Busiest Day</h3>
-                    <p>{{ busiest_day }} - {{ busiest_day_count }} orders</p>
+                    <div class="busy_display">
+                    <img src="{% static 'orders/images/icons8-laptop-100.png' %}" alt="Laptop Icon" class="card-icon">
+                     <div class="busy_txt">
+                        <h3>Busiest Day</h3>
+                        <p>{{ busiest_day }} - {{ busiest_day_count }} orders</p>
+                     </div>
+                    </div>                                        
                 </div>
             </div>
         {% endif %}
@@ -601,8 +637,16 @@ animation: spinBorder 6s linear infinite;
         {% if second_busiest_day %}
             <div class="glow-border">
                 <div class="box-holder inner-card">
+                    <div class="busy_display">
+                    <img src="{% static 'orders/images/icons8-laptop-100.png' %}" alt="Laptop Icon" class="card-icon">
+                     <div class="busy_txt">
                     <h3>Second Busiest Day</h3>
                     <p>{{ second_busiest_day }} - {{ second_busiest_day_count }} orders</p>
+                     </div>
+                    </div>
+
+
+
                 </div>
             </div>
         {% endif %}
